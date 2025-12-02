@@ -15,21 +15,34 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.android.material.textfield.TextInputEditText;
 
 public class LoginActivity extends AppCompatActivity {
-    TextInputEditText emailFeld = findViewById(R.id.email_input);
-    TextInputEditText passwortFeld = findViewById(R.id.password_input);
-    TextView missingEmailAndPassword = findViewById(R.id.missing_email_and_password);
-    TextView missingEmail = findViewById(R.id.missing_email);
-    TextView missingPassword = findViewById(R.id.missing_password);
-    TextView invalidEmail = findViewById(R.id.invalid_email);
-    TextView invalidPassword = findViewById(R.id.invalid_password);
+    TextInputEditText emailFeld;
+    TextInputEditText passwortFeld;
+    TextView missingEmailAndPassword;
+    TextView missingEmail;
+    TextView missingPassword;
+    TextView invalidEmail;
+    TextView invalidPassword;
+    Button loginButton;
+    String passwordText;
+    String emailText;
 
-    String passwordText = passwortFeld.getText().toString().trim();
-    String emailText = emailFeld.getText().toString().trim();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        emailFeld = findViewById(R.id.email_input);
+        passwortFeld = findViewById(R.id.password_input);
+        missingEmailAndPassword = findViewById(R.id.missing_email_and_password);
+        missingEmail = findViewById(R.id.missing_email);
+        missingPassword = findViewById(R.id.missing_password);
+        invalidEmail = findViewById(R.id.invalid_email);
+        invalidPassword = findViewById(R.id.invalid_password);
+
+        loginButton = findViewById(R.id.login_button);
+
+        passwordText = passwortFeld.getText().toString().trim();
+        emailText = emailFeld.getText().toString().trim();
 
     }
 
@@ -41,27 +54,24 @@ public class LoginActivity extends AppCompatActivity {
         invalidPassword.setVisibility(View.GONE);
 
     }
-    private boolean validateLogin() {
+
+    private boolean validateData() {
 
         clearErrors();
 
         if (emailText.isEmpty() && passwordText.isEmpty()) {
             missingEmailAndPassword.setVisibility(View.VISIBLE);
             return false;
-        }
-        else if (emailText.isEmpty()) {
+        } else if (emailText.isEmpty()) {
             missingEmail.setVisibility(View.VISIBLE);
             return false;
-        }
-        else if (passwordText.isEmpty()) {
+        } else if (passwordText.isEmpty()) {
             missingPassword.setVisibility(View.VISIBLE);
             return false;
-        }
-        else if (!emailText.contains("@"))  {
+        } else if (!emailText.contains("@")) {
             invalidEmail.setVisibility(View.VISIBLE);
             return false;
-        }
-        else if (passwordText.length() < 6) {
+        } else if (passwordText.length() < 6) {
             invalidPassword.setVisibility(View.VISIBLE);
             return false;
         }
@@ -69,4 +79,3 @@ public class LoginActivity extends AppCompatActivity {
         return true;
     }
 }
-
