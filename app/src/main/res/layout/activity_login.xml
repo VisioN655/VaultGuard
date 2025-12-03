@@ -12,60 +12,80 @@
         android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="28dp"
         android:text="Bitte geben Sie ihre E-Mail und ihr Passwort ein!"
         android:textColor="#FF0000"
         android:textSize="16sp"
         android:textStyle="bold"
-        tools:layout_editor_absoluteX="32dp"
-        tools:layout_editor_absoluteY="458dp" />
+        app:layout_constraintBottom_toTopOf="@+id/login_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/password_border" />
 
     <TextView
         android:id="@+id/missing_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="28dp"
+        android:visibility="gone"
         android:text="Das E-Mail-Feld darf nicht leer sein!"
         android:textColor="#FF0000"
         android:textSize="16sp"
         android:textStyle="bold"
-        android:visibility="gone"
-        tools:layout_editor_absoluteX="77dp"
-        tools:layout_editor_absoluteY="458dp" />
+        app:layout_constraintBottom_toTopOf="@+id/login_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/password_border" />
 
     <TextView
         android:id="@+id/missing_password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="28dp"
+        android:visibility="gone"
         android:text="Das Passwort-Feld darf nicht leer sein!"
         android:textColor="#FF0000"
         android:textSize="16sp"
         android:textStyle="bold"
-        android:visibility="gone"
-        tools:layout_editor_absoluteX="66dp"
-        tools:layout_editor_absoluteY="458dp" />
+        app:layout_constraintBottom_toTopOf="@+id/login_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/password_border" />
 
     <TextView
         android:id="@+id/invalid_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="28dp"
+        android:visibility="gone"
         android:text="Bitte geben Sie eine gültige E-Mail-Adresse ein!"
         android:textColor="#FF0000"
         android:textSize="16sp"
         android:textStyle="bold"
-        android:visibility="gone"
-        tools:layout_editor_absoluteX="33dp"
-        tools:layout_editor_absoluteY="458dp" />
+        app:layout_constraintBottom_toTopOf="@+id/login_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/password_border" />
 
     <TextView
         android:id="@+id/invalid_password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="28dp"
         android:text="Bitte geben Sie ein gültiges Passwort ein!"
         android:textColor="#FF0000"
         android:textSize="16sp"
         android:textStyle="bold"
         android:visibility="gone"
-        tools:layout_editor_absoluteX="56dp"
-        tools:layout_editor_absoluteY="458dp" />
+        app:layout_constraintBottom_toTopOf="@+id/login_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/password_border" />
 
     <TextView
         android:id="@+id/email_text"

@@ -1,6 +1,7 @@
 package com.example.androidprojekt;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -27,6 +28,7 @@ public class LoginActivity extends AppCompatActivity {
     String emailText;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,9 +43,17 @@ public class LoginActivity extends AppCompatActivity {
 
         loginButton = findViewById(R.id.login_button);
 
+
         passwordText = passwortFeld.getText().toString().trim();
         emailText = emailFeld.getText().toString().trim();
+        loginButton.setOnClickListener(new View.OnClickListener() {
 
+            @Override
+            public void onClick(View v) {
+                validateLogin();
+            }
+
+        });
     }
 
     private void clearErrors() {
@@ -54,28 +64,46 @@ public class LoginActivity extends AppCompatActivity {
         invalidPassword.setVisibility(View.GONE);
 
     }
-
     private boolean validateData() {
-
         clearErrors();
 
+        String emailText = emailFeld.getText().toString().trim();
+        String passwordText = passwortFeld.getText().toString().trim();
+
         if (emailText.isEmpty() && passwordText.isEmpty()) {
+            Log.d("LOGIN", "Email und Passwort fehlt");
             missingEmailAndPassword.setVisibility(View.VISIBLE);
             return false;
-        } else if (emailText.isEmpty()) {
+        }
+        if (emailText.isEmpty()) {
+            Log.d("LOGIN", "Email fehlt");
             missingEmail.setVisibility(View.VISIBLE);
             return false;
-        } else if (passwordText.isEmpty()) {
-            missingPassword.setVisibility(View.VISIBLE);
-            return false;
-        } else if (!emailText.contains("@")) {
+        }
+        if (!emailText.contains("@"))  {
+            Log.d("LOGIN", "Email falsch");
             invalidEmail.setVisibility(View.VISIBLE);
             return false;
-        } else if (passwordText.length() < 6) {
+        }
+
+
+        if (passwordText.isEmpty()) {
+            Log.d("LOGIN", "Passwort fehlt");
+            missingPassword.setVisibility(View.VISIBLE);
+            return false;
+        }
+
+        if (passwordText.length() < 6) {
+            Log.d("LOGIN", "Passwort kurz");
             invalidPassword.setVisibility(View.VISIBLE);
             return false;
         }
 
         return true;
     }
+
+    private void validateLogin() {
+        validateData();
+        }
 }
+
