@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.androidprojekt"
+    namespace = "com.example.vaultguard"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.example.androidprojekt"
+        applicationId = "com.example.vaultguard"
         minSdk = 24
         targetSdk = 36
         versionCode = 1

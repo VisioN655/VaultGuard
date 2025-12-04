@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "AndroidProjekt"
+rootProject.name = "VaultGuard"
 include(":app")
  
