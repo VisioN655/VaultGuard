@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "352052373172",
+    "project_id": "vaultguard-b06ce",
+    "storage_bucket": "vaultguard-b06ce.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:352052373172:android:60b5cb5f4d527a922719e1",
+        "android_client_info": {
+          "package_name": "com.example.vaultguard"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD0WoB0XhWD1JX3v_32ornJgcm1qL3S1qw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
