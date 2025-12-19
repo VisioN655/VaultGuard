@@ -139,6 +139,7 @@
             android:gravity="center|center_horizontal|center_vertical"
             android:hint="Passwort"
             android:inputType="text|textEmailAddress"
+            android:textColor="#FFFFFF"
             android:textColorHint="#717171" />
     </androidx.cardview.widget.CardView>
 
@@ -185,6 +186,7 @@
             android:gravity="center|center_horizontal|center_vertical"
             android:hint="E-Mail"
             android:inputType="text|textEmailAddress"
+            android:textColor="#FFFFFF"
             android:textColorHint="#717171" />
     </androidx.cardview.widget.CardView>
 
