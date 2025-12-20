@@ -26,6 +26,7 @@ public class LoginActivity extends AppCompatActivity {
     TextView invalidPassword;
     TextView loginFailed;
     Button loginButton;
+    Button registerButton;
     String passwordText;
     String emailText;
 
@@ -45,8 +46,7 @@ public class LoginActivity extends AppCompatActivity {
         invalidPassword = findViewById(R.id.invalid_password);
         loginFailed = findViewById(R.id.login_failed);
         loginButton = findViewById(R.id.login_button);
-
-
+        registerButton = findViewById(R.id.register_button);
         passwordText = passwortFeld.getText().toString().trim();
         emailText = emailFeld.getText().toString().trim();
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -57,6 +57,15 @@ public class LoginActivity extends AppCompatActivity {
             }
 
         });
+
+        registerButton.setOnClickListener(new View.OnClickListener() {
+            Intent registrieren = new Intent(LoginActivity.this, RegisterActivity.class);
+            @Override
+            public void onClick (View v) {
+                startActivity(registrieren);
+            }
+        });
+
     }
 
     private void clearErrors() {
