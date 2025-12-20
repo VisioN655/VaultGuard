@@ -20,6 +20,7 @@ public class LoginActivity extends AppCompatActivity {
     TextView missingPassword;
     TextView invalidEmail;
     TextView invalidPassword;
+    TextView loginFailed;
     Button loginButton;
     String passwordText;
     String emailText;
@@ -38,7 +39,7 @@ public class LoginActivity extends AppCompatActivity {
         missingPassword = findViewById(R.id.missing_password);
         invalidEmail = findViewById(R.id.invalid_email);
         invalidPassword = findViewById(R.id.invalid_password);
-
+        loginFailed = findViewById(R.id.login_failed);
         loginButton = findViewById(R.id.login_button);
 
 
@@ -55,12 +56,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void clearErrors() {
-        missingEmail.setVisibility(View.GONE);
-        missingPassword.setVisibility(View.GONE);
-        missingEmailAndPassword.setVisibility(View.GONE);
-        invalidEmail.setVisibility(View.GONE);
-        invalidPassword.setVisibility(View.GONE);
-
+        missingEmail.setVisibility(View.INVISIBLE);
+        missingPassword.setVisibility(View.INVISIBLE);
+        missingEmailAndPassword.setVisibility(View.INVISIBLE);
+        invalidEmail.setVisibility(View.INVISIBLE);
+        invalidPassword.setVisibility(View.INVISIBLE);
+        loginFailed.setVisibility(View.INVISIBLE);
     }
     private boolean validateData() {
         clearErrors();
