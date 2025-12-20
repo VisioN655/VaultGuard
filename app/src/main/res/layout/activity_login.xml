@@ -163,7 +163,8 @@
             android:hint="Passwort"
             android:inputType="text|textPassword"
             android:textColor="#FFFFFF"
-            android:textColorHint="#717171" />
+            android:textColorHint="#717171"
+            android:backgroundTint="#5232B3"/>
 
         <ImageView
             android:id="@+id/show_password"
@@ -219,7 +220,8 @@
             android:hint="E-Mail"
             android:inputType="text|textEmailAddress"
             android:textColor="#FFFFFF"
-            android:textColorHint="#717171" />
+            android:textColorHint="#717171"
+            android:backgroundTint="#5232B3"/>
     </androidx.cardview.widget.CardView>
 
     <Button
