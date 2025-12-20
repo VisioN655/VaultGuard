@@ -9,8 +9,10 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.*;
 
 public class LoginActivity extends AppCompatActivity {
+    FirebaseAuth auth;
     TextInputEditText emailFeld;
     TextInputEditText passwortFeld;
     TextView missingEmailAndPassword;
@@ -28,6 +30,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        auth = FirebaseAuth.getInstance();
         emailFeld = findViewById(R.id.email_input);
         passwortFeld = findViewById(R.id.password_input);
         missingEmailAndPassword = findViewById(R.id.missing_email_and_password);
@@ -98,6 +101,5 @@ public class LoginActivity extends AppCompatActivity {
 
     private void validateLogin() {
         validateData();
-        }
+    }
 }
-
