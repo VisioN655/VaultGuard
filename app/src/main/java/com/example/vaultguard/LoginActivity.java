@@ -2,9 +2,12 @@ package com.example.vaultguard;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -29,7 +32,8 @@ public class LoginActivity extends AppCompatActivity {
     Button registerButton;
     String passwordText;
     String emailText;
-
+    ImageView eyeView;
+    boolean isPasswordVisible;
 
 
     @Override
@@ -47,15 +51,17 @@ public class LoginActivity extends AppCompatActivity {
         loginFailed = findViewById(R.id.login_failed);
         loginButton = findViewById(R.id.login_button);
         registerButton = findViewById(R.id.register_button);
+        eyeView = findViewById(R.id.show_password);
         passwordText = passwortFeld.getText().toString().trim();
         emailText = emailFeld.getText().toString().trim();
+        isPasswordVisible = false;
+
         loginButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 validateLogin();
             }
-
         });
 
         registerButton.setOnClickListener(new View.OnClickListener() {
@@ -66,6 +72,27 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        eyeView.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                togglePasswordVisibility();
+            }
+        });
+    }
+
+    private void togglePasswordVisibility() {
+        if (isPasswordVisible) {
+            passwortFeld.setTransformationMethod(
+                    PasswordTransformationMethod.getInstance()
+            );
+            isPasswordVisible = false;
+        } else {
+            passwortFeld.setTransformationMethod(
+                    HideReturnsTransformationMethod.getInstance()
+            );
+            isPasswordVisible = true;
+        }
     }
 
     private void clearErrors() {
@@ -76,6 +103,7 @@ public class LoginActivity extends AppCompatActivity {
         invalidPassword.setVisibility(View.INVISIBLE);
         loginFailed.setVisibility(View.INVISIBLE);
     }
+
     private boolean validateData() {
         clearErrors();
 
@@ -83,29 +111,24 @@ public class LoginActivity extends AppCompatActivity {
         String passwordText = passwortFeld.getText().toString().trim();
 
         if (emailText.isEmpty() && passwordText.isEmpty()) {
-            Log.d("LOGIN", "Email und Passwort fehlt");
             missingEmailAndPassword.setVisibility(View.VISIBLE);
             return false;
         }
         if (emailText.isEmpty()) {
-            Log.d("LOGIN", "Email fehlt");
             missingEmail.setVisibility(View.VISIBLE);
             return false;
         }
-        if (!emailText.contains("@"))  {
-            Log.d("LOGIN", "Email falsch");
+        if (!emailText.contains("@")) {
             invalidEmail.setVisibility(View.VISIBLE);
             return false;
         }
 
         if (passwordText.isEmpty()) {
-            Log.d("LOGIN", "Passwort fehlt");
             missingPassword.setVisibility(View.VISIBLE);
             return false;
         }
 
         if (passwordText.length() < 6) {
-            Log.d("LOGIN", "Passwort kurz");
             invalidPassword.setVisibility(View.VISIBLE);
             return false;
         }
