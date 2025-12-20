@@ -1,13 +1,17 @@
 package com.example.vaultguard;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.*;
 
@@ -100,7 +104,25 @@ public class LoginActivity extends AppCompatActivity {
         return true;
     }
 
-    private void validateLogin() {
-        validateData();
+    private void fireBaseAuth() {
+        String emailText = emailFeld.getText().toString().trim();
+        String passwordText = passwortFeld.getText().toString().trim();
+        Intent HomeScreen = new Intent(LoginActivity.this, HomeScreenActivity.class);
+        auth.signInWithEmailAndPassword(emailText, passwordText).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+            public void onComplete(@NonNull Task<AuthResult> loginResult) {
+                if (loginResult.isSuccessful()) {
+                    startActivity(HomeScreen);
+                } else loginFailed.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
+    private boolean validateLogin() {
+        if (!validateData()) {
+            return false;
+        } else {
+            fireBaseAuth();
+            return true;
+        }
     }
 }
