@@ -40,7 +40,6 @@ public class LoginActivity extends AppCompatActivity {
     String emailText;
     ImageView eyeView;
     boolean isPasswordVisible;
-    TextInputEditText bestaetigenEmailText;
     AlertDialog dialogResetPassword;
     AlertDialog dialogConfirmReset;
 
@@ -116,6 +115,7 @@ public class LoginActivity extends AppCompatActivity {
     private void showResetPasswordDialog() {
         LayoutInflater dialogInflater = getLayoutInflater();
         View dialogView = dialogInflater.inflate(R.layout.dialog_reset_password, null);
+        TextInputEditText emailFeld = dialogView.findViewById(R.id.dialog_email);
         Button sendenButton = dialogView.findViewById(R.id.send_button);
         Button abbrechenButton = dialogView.findViewById(R.id.cancel_button);
 
@@ -134,7 +134,10 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
             String email = emailFeld.getText().toString().trim();
-            validateEmail(email);
+            if (!validateEmail(email)) {
+                return;
+            }
+            fireBaseResetPassword(email);
             }
         });
     }
@@ -170,11 +173,9 @@ public class LoginActivity extends AppCompatActivity {
             Toast.makeText(this,"Das E-Mail-Feld darf nicht leer sein!", Toast.LENGTH_SHORT).show();
             return false;
         }
-        else if (!email.contains("@")) {
-            Toast.makeText(this, "Bitte geben Sie eine gültige E-Mail-Adresse ein!", Toast.LENGTH_SHORT).show();
-            return false;
-        } return true;
+        return true;
     }
+
     private boolean validateData() {
         clearErrors();
 
@@ -207,14 +208,20 @@ public class LoginActivity extends AppCompatActivity {
         return true;
     }
 
-    private void fireBaseResetPassword() {
-        String email = bestaetigenEmailText.getText().toString().trim();
+    private void fireBaseResetPassword(String email) {
         auth.sendPasswordResetEmail(email).addOnCompleteListener(this, new OnCompleteListener<Void>() {
             public void onComplete(@NonNull Task<Void> resetPassword) {
                 if (resetPassword.isSuccessful()) {
-                    Log.d("RESET", "Passwort-Link versendet!");
+                    if (dialogResetPassword != null)  {
                     dialogResetPassword.dismiss();
+                    }
                     showConfirmResetDialog();
+                    return;
+                }
+                Exception e = resetPassword.getException();
+
+                if (e instanceof com.google.firebase.auth.FirebaseAuthInvalidCredentialsException) {
+                    Toast.makeText(LoginActivity.this,"Bitte geben Sie eine gültige E-Mail-Adresse ein!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
