@@ -1,16 +1,21 @@
 package com.example.vaultguard;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -30,10 +35,14 @@ public class LoginActivity extends AppCompatActivity {
     TextView loginFailed;
     Button loginButton;
     Button registerButton;
+    Button resetPasswordButton;
     String passwordText;
     String emailText;
     ImageView eyeView;
     boolean isPasswordVisible;
+    TextInputEditText bestaetigenEmailText;
+    AlertDialog dialogResetPassword;
+    AlertDialog dialogConfirmReset;
 
 
     @Override
@@ -51,6 +60,7 @@ public class LoginActivity extends AppCompatActivity {
         loginFailed = findViewById(R.id.login_failed);
         loginButton = findViewById(R.id.login_button);
         registerButton = findViewById(R.id.register_button);
+        resetPasswordButton = findViewById(R.id.reset_password_button);
         eyeView = findViewById(R.id.show_password);
         passwordText = passwortFeld.getText().toString().trim();
         emailText = emailFeld.getText().toString().trim();
@@ -79,7 +89,15 @@ public class LoginActivity extends AppCompatActivity {
                 togglePasswordVisibility();
             }
         });
+        resetPasswordButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                showResetPasswordDialog();
+            }
+        });
     }
+
 
     private void togglePasswordVisibility() {
         if (isPasswordVisible) {
@@ -95,6 +113,49 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    private void showResetPasswordDialog() {
+        LayoutInflater dialogInflater = getLayoutInflater();
+        View dialogView = dialogInflater.inflate(R.layout.dialog_reset_password, null);
+        Button sendenButton = dialogView.findViewById(R.id.send_button);
+        Button abbrechenButton = dialogView.findViewById(R.id.cancel_button);
+
+        dialogResetPassword = new AlertDialog.Builder(LoginActivity.this).setView(dialogView).setCancelable(true).create();
+        dialogResetPassword.show();
+        dialogResetPassword.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        abbrechenButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogResetPassword.dismiss();
+            }
+        });
+
+        sendenButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            String email = emailFeld.getText().toString().trim();
+            validateEmail(email);
+            }
+        });
+    }
+
+    private void showConfirmResetDialog() {
+        LayoutInflater dialogInflater = getLayoutInflater();
+        View dialogView = dialogInflater.inflate(R.layout.dialog_confirm_reset, null);
+        Button bestaetigenButton = dialogView.findViewById(R.id.confirm_button);
+
+        dialogConfirmReset = new AlertDialog.Builder(LoginActivity.this).setView(dialogView).setCancelable(true).create();
+        dialogConfirmReset.show();
+        dialogConfirmReset.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        bestaetigenButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogConfirmReset.dismiss();
+            }
+        });
+    }
+
     private void clearErrors() {
         missingEmail.setVisibility(View.INVISIBLE);
         missingPassword.setVisibility(View.INVISIBLE);
@@ -104,6 +165,16 @@ public class LoginActivity extends AppCompatActivity {
         loginFailed.setVisibility(View.INVISIBLE);
     }
 
+    private boolean validateEmail(String email) {
+        if (email.isEmpty()) {
+            Toast.makeText(this,"Das E-Mail-Feld darf nicht leer sein!", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        else if (!email.contains("@")) {
+            Toast.makeText(this, "Bitte geben Sie eine gültige E-Mail-Adresse ein!", Toast.LENGTH_SHORT).show();
+            return false;
+        } return true;
+    }
     private boolean validateData() {
         clearErrors();
 
@@ -136,7 +207,19 @@ public class LoginActivity extends AppCompatActivity {
         return true;
     }
 
-    private void fireBaseAuth() {
+    private void fireBaseResetPassword() {
+        String email = bestaetigenEmailText.getText().toString().trim();
+        auth.sendPasswordResetEmail(email).addOnCompleteListener(this, new OnCompleteListener<Void>() {
+            public void onComplete(@NonNull Task<Void> resetPassword) {
+                if (resetPassword.isSuccessful()) {
+                    Log.d("RESET", "Passwort-Link versendet!");
+                    dialogResetPassword.dismiss();
+                    showConfirmResetDialog();
+                }
+            }
+        });
+    }
+    private void fireBaseAuthLogin() {
         String emailText = emailFeld.getText().toString().trim();
         String passwordText = passwortFeld.getText().toString().trim();
         Intent HomeScreen = new Intent(LoginActivity.this, HomeScreenActivity.class);
@@ -153,7 +236,7 @@ public class LoginActivity extends AppCompatActivity {
         if (!validateData()) {
             return false;
         } else {
-            fireBaseAuth();
+            fireBaseAuthLogin();
             return true;
         }
     }
