@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/register"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#1E1E1E">
+
+    <TextView
+        android:id="@+id/missing_email_and_password"
+        android:visibility="invisible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="28dp"
+        android:text="Bitte geben Sie ihre E-Mail und ihr Passwort ein!"
+        android:textColor="#FF0000"
+        android:textSize="17sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/login_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/password_border"
+        app:layout_constraintVertical_bias="0.0"/>
+
+    <TextView
+        android:id="@+id/missing_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="28dp"
+        android:visibility="invisible"
+        android:text="Das E-Mail-Feld darf nicht leer sein!"
+        android:textColor="#FF0000"
+        android:textSize="17sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/login_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/password_border"
+        app:layout_constraintVertical_bias="0.0"/>
+
+    <TextView
+        android:id="@+id/missing_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="28dp"
+        android:visibility="invisible"
+        android:text="Das Passwort-Feld darf nicht leer sein!"
+        android:textColor="#FF0000"
+        android:textSize="17sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/login_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/password_border"
+        app:layout_constraintVertical_bias="0.0"/>
+
+    <TextView
+        android:id="@+id/invalid_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="28dp"
+        android:visibility="invisible"
+        android:text="Bitte geben Sie eine gültige E-Mail-Adresse ein!"
+        android:textColor="#FF0000"
+        android:textSize="17sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/login_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/password_border"
+        app:layout_constraintVertical_bias="0.0"/>
+
+    <TextView
+        android:id="@+id/login_failed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="28dp"
+        android:visibility="invisible"
+        android:text="Ihre E-Mail oder ihr Passwort ist falsch!"
+        android:textColor="#FF0000"
+        android:textSize="17sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/login_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/password_border"
+        app:layout_constraintVertical_bias="0.0"/>
+
+    <TextView
+        android:id="@+id/invalid_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="28dp"
+        android:text="Bitte geben Sie ein gültiges Passwort ein!"
+        android:textColor="#FF0000"
+        android:textSize="17sp"
+        android:textStyle="bold"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/login_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/password_border"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/email_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-40dp"
+        android:layout_marginBottom="8dp"
+        android:gravity="center"
+        android:text="E-Mail eingeben:"
+        android:textColor="#E0E0E0"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/header"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/password_text" />
+
+    <TextView
+        android:id="@+id/password_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:gravity="center"
+        android:text="Passwort eingeben:"
+        android:textColor="#E0E0E0"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/password_border"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/email_border" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/password_border"
+        android:layout_width="260dp"
+        android:layout_height="85dp"
+        app:cardBackgroundColor="#282828"
+        app:cardCornerRadius="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/password_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.811">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/password_input"
+            android:layout_width="195dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center|center_horizontal|center_vertical"
+            android:layout_marginTop="5dp"
+            android:gravity="center|center_horizontal|center_vertical"
+            android:hint="Passwort"
+            android:inputType="text|textPassword"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#717171"
+            android:backgroundTint="#5232B3"/>
+
+        <ImageView
+            android:id="@+id/show_password"
+            android:layout_width="33dp"
+            android:layout_height="33dp"
+            android:layout_marginVertical="27dp"
+            android:layout_marginLeft="226dp"
+            android:gravity="center_vertical"
+            app:srcCompat="@android:drawable/ic_menu_view" />
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/header"
+        android:layout_width="0dp"
+        android:layout_height="87dp"
+        android:foregroundGravity="center_vertical"
+        app:cardBackgroundColor="#5232B3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/register_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Registrieren"
+            android:textColor="#E0E0E0"
+            android:textSize="34sp"
+            android:textStyle="bold" />
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/email_border"
+        android:layout_width="260dp"
+        android:layout_height="85dp"
+        android:layout_marginBottom="24dp"
+        app:cardBackgroundColor="#282828"
+        app:cardCornerRadius="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/password_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/email_text">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/email_input"
+            android:layout_width="195dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center|center_horizontal|center_vertical"
+            android:layout_marginTop="5dp"
+            android:gravity="center|center_horizontal|center_vertical"
+            android:hint="E-Mail"
+            android:inputType="text|textEmailAddress"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#717171"
+            android:backgroundTint="#5232B3"/>
+    </androidx.cardview.widget.CardView>
+
+    <Button
+        android:id="@+id/register_button"
+        android:layout_width="250dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="60dp"
+        android:backgroundTint="#5232B3"
+        android:text="Registrieren"
+        android:textColor="#E0E0E0"
+        android:textSize="34sp"
+        android:textStyle="bold"
+        app:cornerRadius="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/login_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/password_border" />
+
+    <TextView
+        android:id="@+id/login_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-25dp"
+        android:text="Sie besitzen bereits ein Konto?"
+        android:textColor="#E0E0E0"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/login_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/register_button" />
+
+    <Button
+        android:id="@+id/login_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-28dp"
+        android:layout_marginBottom="60dp"
+        android:backgroundTint="#00FFFFFF"
+        android:text="Hier anmelden"
+        android:textColor="#7150D3"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_text" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
