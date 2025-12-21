@@ -234,6 +234,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> loginResult) {
                 if (loginResult.isSuccessful()) {
                     startActivity(HomeScreen);
+                    finish();
                 } else loginFailed.setVisibility(View.VISIBLE);
             }
         });
