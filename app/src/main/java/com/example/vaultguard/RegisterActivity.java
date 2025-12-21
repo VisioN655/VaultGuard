@@ -23,6 +23,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.zip.Inflater;
@@ -38,6 +39,7 @@ public class RegisterActivity extends AppCompatActivity {
     TextView missingPassword;
     TextView invalidEmail;
     TextView invalidPassword;
+    TextView emailAlreadyUsed;
     ImageView eyeView;
     boolean isPasswordVisible;
     AlertDialog dialogConfirmRegister;
@@ -58,6 +60,7 @@ public class RegisterActivity extends AppCompatActivity {
         missingPassword = findViewById(R.id.missing_password);
         invalidEmail = findViewById(R.id.invalid_email);
         invalidPassword = findViewById(R.id.invalid_password);
+        emailAlreadyUsed = findViewById(R.id.email_already_used);
         eyeView = findViewById(R.id.show_password);
         isPasswordVisible = false;
         email = emailFeld.getText().toString().trim();
@@ -105,6 +108,7 @@ public class RegisterActivity extends AppCompatActivity {
         missingEmailAndPassword.setVisibility(View.INVISIBLE);
         invalidEmail.setVisibility(View.INVISIBLE);
         invalidPassword.setVisibility(View.INVISIBLE);
+        emailAlreadyUsed.setVisibility(View.INVISIBLE);
     }
 
     private boolean validateData() {
@@ -177,16 +181,20 @@ public class RegisterActivity extends AppCompatActivity {
         auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> registerTask) {
+                Exception e = registerTask.getException();
                 if (registerTask.isSuccessful()) {
                     fireBaseConfirmRegister();
                     Log.d("REGISTER", "Erfolgreich registriert!");
                     return;
-                }
-                    Exception e = registerTask.getException();
-                    if (e instanceof com.google.firebase.auth.FirebaseAuthInvalidCredentialsException){
+                } else {
+                    if (e instanceof com.google.firebase.auth.FirebaseAuthUserCollisionException) {
+                        emailAlreadyUsed.setVisibility(View.VISIBLE);
+                    }
+                    else if (e instanceof com.google.firebase.auth.FirebaseAuthInvalidCredentialsException) {
                         invalidEmail.setVisibility(View.VISIBLE);
                     }
                 }
+            }
         });
     }
 
