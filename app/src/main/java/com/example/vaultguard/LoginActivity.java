@@ -32,6 +32,7 @@ public class LoginActivity extends AppCompatActivity {
     TextView missingPassword;
     TextView invalidEmail;
     TextView invalidPassword;
+    TextView userNotVerified;
     TextView loginFailed;
     Button loginButton;
     Button registerButton;
@@ -56,6 +57,7 @@ public class LoginActivity extends AppCompatActivity {
         missingPassword = findViewById(R.id.missing_password);
         invalidEmail = findViewById(R.id.invalid_email);
         invalidPassword = findViewById(R.id.invalid_password);
+        userNotVerified = findViewById(R.id.user_not_verified);
         loginFailed = findViewById(R.id.login_failed);
         loginButton = findViewById(R.id.login_button);
         registerButton = findViewById(R.id.register_button);
@@ -226,15 +228,26 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void checkUserVerification() {
+        Intent HomeScreen = new Intent(LoginActivity.this, HomeScreenActivity.class);
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        user.reload();
+        if (user.isEmailVerified()) {
+            startActivity(HomeScreen);
+            finish();
+        } else {
+            userNotVerified.setVisibility(View.VISIBLE);
+        }
+
+    }
     private void fireBaseAuthLogin() {
         String emailText = emailFeld.getText().toString().trim();
         String passwordText = passwortFeld.getText().toString().trim();
-        Intent HomeScreen = new Intent(LoginActivity.this, HomeScreenActivity.class);
         auth.signInWithEmailAndPassword(emailText, passwordText).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             public void onComplete(@NonNull Task<AuthResult> loginResult) {
                 if (loginResult.isSuccessful()) {
-                    startActivity(HomeScreen);
-                    finish();
+                    checkUserVerification();
                 } else loginFailed.setVisibility(View.VISIBLE);
             }
         });
