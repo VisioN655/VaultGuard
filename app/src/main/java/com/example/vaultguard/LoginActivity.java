@@ -168,6 +168,7 @@ public class LoginActivity extends AppCompatActivity {
         invalidEmail.setVisibility(View.INVISIBLE);
         invalidPassword.setVisibility(View.INVISIBLE);
         loginFailed.setVisibility(View.INVISIBLE);
+        userNotVerified.setVisibility(View.INVISIBLE);
     }
 
     private boolean validateEmail(String email) {
