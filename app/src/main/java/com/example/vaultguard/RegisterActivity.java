@@ -1,15 +1,21 @@
 package com.example.vaultguard;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -17,6 +23,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+import java.util.zip.Inflater;
 
 public class RegisterActivity extends AppCompatActivity {
     FirebaseAuth auth;
@@ -31,6 +40,9 @@ public class RegisterActivity extends AppCompatActivity {
     TextView invalidPassword;
     ImageView eyeView;
     boolean isPasswordVisible;
+    AlertDialog dialogConfirmRegister;
+    String email;
+    String password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +60,8 @@ public class RegisterActivity extends AppCompatActivity {
         invalidPassword = findViewById(R.id.invalid_password);
         eyeView = findViewById(R.id.show_password);
         isPasswordVisible = false;
+        email = emailFeld.getText().toString().trim();
+        password = passwortFeld.getText().toString().trim();
 
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,11 +139,62 @@ public class RegisterActivity extends AppCompatActivity {
         return true;
     }
 
+    private void showConfirmRegisterDialog() {
+        LayoutInflater dialogInflater = getLayoutInflater();
+        View dialogView = dialogInflater.inflate(R.layout.dialog_confirm_register, null);
+        Button bestaetigenButton = dialogView.findViewById(R.id.confirm_button);
+        Intent loginScreen = new Intent(RegisterActivity.this, LoginActivity.class);
+
+        dialogConfirmRegister = new AlertDialog.Builder(RegisterActivity.this).setView(dialogView).setCancelable(true).create();
+        dialogConfirmRegister.show();
+        dialogConfirmRegister.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        bestaetigenButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogConfirmRegister.dismiss();
+                startActivity(loginScreen);
+            }
+        });
+    }
+
+    private void fireBaseConfirmRegister() {
+        FirebaseUser user = auth.getCurrentUser();
+
+        if (user != null) {
+            user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> verifyTask) {
+                    showConfirmRegisterDialog();
+                }
+            });
+        }
+    }
+
+    private void fireBaseRegister() {
+        email = emailFeld.getText().toString().trim();
+        password = passwortFeld.getText().toString().trim();
+        auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> registerTask) {
+                if (registerTask.isSuccessful()) {
+                    fireBaseConfirmRegister();
+                    Log.d("REGISTER", "Erfolgreich registriert!");
+                    return;
+                }
+                    Exception e = registerTask.getException();
+                    if (e instanceof com.google.firebase.auth.FirebaseAuthInvalidCredentialsException){
+                        invalidEmail.setVisibility(View.VISIBLE);
+                    }
+                }
+        });
+    }
 
     private boolean validateRegister() {
         if (!validateData()) {
             return false;
         } else {
+            fireBaseRegister();
             return true;
         }
     }
