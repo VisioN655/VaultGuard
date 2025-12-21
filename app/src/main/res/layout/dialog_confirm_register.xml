@@ -42,7 +42,7 @@
             android:textAlignment="center"
             android:textColor="#BDBDBD"
             android:textSize="16sp"
-            app:layout_constraintBottom_toTopOf="@+id/send_button"
+            app:layout_constraintBottom_toTopOf="@+id/confirm_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/dialog_title" />
@@ -51,7 +51,7 @@
             android:id="@+id/confirm_button"
             android:layout_width="0dp"
             android:layout_height="48dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:backgroundTint="#5232B3"
             android:text="Verstanden"
             android:textColor="#E0E0E0"
