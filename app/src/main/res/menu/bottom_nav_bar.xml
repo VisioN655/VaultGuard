@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_passwords"
+        android:icon="@drawable/password_list_icon"
+        android:title="Passwortliste" />
+
+    <item
+        android:id="@+id/nav_generator"
+        android:icon="@drawable/password_generator_icon"
+        android:title="Passwort-Generator" />
+</menu>
