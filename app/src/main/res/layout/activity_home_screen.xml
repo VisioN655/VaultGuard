@@ -31,13 +31,15 @@
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_nav"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="120dp"
         android:background="#5232B3"
-        app:itemTextColor="#1E1E1E"
         app:itemIconSize="35dp"
+        app:itemIconTint="@color/bottom_nav_bar_style"
+        app:itemActiveIndicatorStyle="@style/Custom.Indicator"
+        app:itemTextColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/bottom_nav_bar"/>
+        app:menu="@menu/bottom_nav_bar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
