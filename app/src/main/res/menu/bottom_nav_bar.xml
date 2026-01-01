@@ -5,6 +5,10 @@
         android:title="Passwortliste" />
 
     <item
+        android:title=""
+        android:enabled="false"/>
+
+    <item
         android:id="@+id/nav_generator"
         android:icon="@drawable/password_generator_icon"
         android:title="Passwort-Generator" />
