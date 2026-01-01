@@ -1,0 +1,5 @@
+<resources>
+<style name="Custom.Indicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+    <item name="android:color">#709C4DFF</item>
+</style>
+</resources>
