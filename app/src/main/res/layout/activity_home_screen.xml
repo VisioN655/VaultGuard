@@ -42,4 +42,34 @@
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/bottom_nav_bar" />
 
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/add_button"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="650dp"
+        android:clickable="true"
+        android:translationZ="20dp"
+        app:cardBackgroundColor="#723ED2"
+        app:cardCornerRadius="50dp"
+        app:cardElevation="10dp"
+        app:layout_constraintBottom_toBottomOf="@id/bottom_nav"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/header"
+        app:strokeColor="#27007A"
+        app:strokeWidth="4dp">
+
+        <TextView
+            android:id="@+id/plus_text"
+            android:layout_width="wrap_content"
+            android:layout_height="217dp"
+            android:layout_gravity="center"
+            android:clickable="false"
+            android:includeFontPadding="false"
+            android:text="+"
+            android:textColor="@color/white"
+            android:textSize="170sp"
+            android:translationY="8dp" />
+
+    </com.google.android.material.card.MaterialCardView>
 </androidx.constraintlayout.widget.ConstraintLayout>
