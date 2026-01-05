@@ -40,6 +40,7 @@ dependencies {
     implementation(libs.cardview)
     implementation(libs.firebase.auth)
     implementation(libs.recyclerview)
+    implementation(libs.fragment)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
