@@ -23,6 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="Passwortliste"
+            android:layout_marginTop="4dp"
             android:textColor="#E0E0E0"
             android:textSize="34sp"
             android:textStyle="bold" />
@@ -72,4 +73,31 @@
             android:translationY="8dp" />
 
     </com.google.android.material.card.MaterialCardView>
+
+    <TextView
+        android:id="@+id/empty_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Noch keine Passwörter gespeichert :(\nTippe auf +, um dein erstes Passwort hinzuzufügen."
+        android:textAlignment="center"
+        android:textColor="#808080"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@id/add_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/header"/>
+
+    <ImageView
+        android:id="@+id/dropdown_menu_button"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginLeft="20dp"
+        android:translationZ="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/header"
+        app:srcCompat="@drawable/vertical_more"
+        android:clickable="true"
+        android:contentDescription="Menü öffnen"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
