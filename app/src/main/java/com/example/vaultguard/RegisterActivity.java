@@ -74,15 +74,13 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
         loginButton.setOnClickListener(new View.OnClickListener() {
-            Intent einloggen = new Intent(RegisterActivity.this, LoginActivity.class);
             @Override
             public void onClick (View v) {
-                startActivity(einloggen);
+                finish();
             }
         });
 
         eyeView.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 togglePasswordVisibility();
