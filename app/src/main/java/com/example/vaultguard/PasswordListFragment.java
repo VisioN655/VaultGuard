@@ -91,6 +91,8 @@ public class PasswordListFragment extends Fragment {
                                 card_password.setText(password);
                                 Glide.with(PasswordListFragment.this)
                                         .load(imageURL)
+                                        .placeholder(R.drawable.rounded_rectangle_bg)
+                                        .error(R.drawable.rounded_rectangle_bg)
                                         .into(card_image);
 
                                 passwordCard.setOnClickListener(new View.OnClickListener() {
