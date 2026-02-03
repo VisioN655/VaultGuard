@@ -3,8 +3,11 @@ package com.example.vaultguard;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +40,7 @@ public class AddPasswordActivity extends AppCompatActivity {
     Button saveButton;
     CardView uploadImage;
     TextView uploadText;
+    ImageView eyeView;
     Uri selectedImage;
     ActivityResultLauncher<String> imagePickerLauncher;
     FirebaseFirestore db;
@@ -44,6 +48,7 @@ public class AddPasswordActivity extends AppCompatActivity {
     FirebaseStorage storage;
     StorageReference storageRef;
     String imageUrl;
+    boolean isPasswordVisible;
 
 
 
@@ -58,10 +63,12 @@ public class AddPasswordActivity extends AppCompatActivity {
         saveButton = findViewById(R.id.save_button);
         uploadImage = findViewById(R.id.upload_border);
         uploadText = findViewById(R.id.upload_text);
+        eyeView = findViewById(R.id.show_password);
         db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
         storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
+        isPasswordVisible = false;
 
         imagePickerLauncher = registerForActivityResult(
                 new ActivityResultContracts.GetContent(),
@@ -106,6 +113,13 @@ public class AddPasswordActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 imagePickerLauncher.launch("image/*");
+            }
+        });
+
+        eyeView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                togglePasswordVisibility();
             }
         });
     }
@@ -188,5 +202,18 @@ public class AddPasswordActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+    private void togglePasswordVisibility() {
+        if (isPasswordVisible) {
+            passwordInput.setTransformationMethod(
+                    PasswordTransformationMethod.getInstance()
+            );
+            isPasswordVisible = false;
+        } else {
+            passwordInput.setTransformationMethod(
+                    HideReturnsTransformationMethod.getInstance()
+            );
+            isPasswordVisible = true;
+        }
     }
 }
