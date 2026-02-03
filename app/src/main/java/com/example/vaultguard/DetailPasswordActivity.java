@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -13,8 +14,10 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class DetailPasswordActivity extends AppCompatActivity {
@@ -27,18 +30,17 @@ public class DetailPasswordActivity extends AppCompatActivity {
     Button cancelButton;
     Button editButton;
     Button deleteButton;
+    String docId;
+    String title;
+    String email;
+    String password;
+    String imageURL;
     boolean isPasswordVisible;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_password);
-
-        String docId = getIntent().getStringExtra("docId");
-        String title = getIntent().getStringExtra("title");
-        String email = getIntent().getStringExtra("email");
-        String password = getIntent().getStringExtra("password");
-        String imageURL = getIntent().getStringExtra("imageURL");
 
         titleView = findViewById(R.id.platform_title);
         emailInput = findViewById(R.id.item_email_input);
@@ -50,15 +52,7 @@ public class DetailPasswordActivity extends AppCompatActivity {
         deleteButton = findViewById(R.id.delete_button);
         isPasswordVisible = false;
 
-        titleView.setText(title);
-        emailInput.setText(email);
-        passwordInput.setText(password);
-
-        Glide.with(this)
-                .load(imageURL)
-                .placeholder(R.drawable.rounded_rectangle_bg)
-                .error(R.drawable.rounded_rectangle_bg)
-                .into(iconView);
+        docId = getIntent().getStringExtra("docId");
 
         eyeView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,6 +89,12 @@ public class DetailPasswordActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadPassword();
+    }
+
     private void togglePasswordVisibility() {
         if (isPasswordVisible) {
             passwordInput.setTransformationMethod(
@@ -123,6 +123,38 @@ public class DetailPasswordActivity extends AppCompatActivity {
                 .addOnSuccessListener(unused -> {
                     Toast.makeText(this, "Passwort gelöscht", Toast.LENGTH_SHORT).show();
                     finish();
+                });
+    }
+
+    private void loadPassword() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        String uid = auth.getCurrentUser().getUid();
+
+        db.collection("users")
+                .document(uid)
+                .collection("passwords")
+                .document(docId)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot doc) {
+
+                        title = doc.getString("title");
+                        email = doc.getString("email");
+                        password = doc.getString("password");
+                        imageURL = doc.getString("imageURL");
+
+                        titleView.setText(title);
+                        emailInput.setText(email);
+                        passwordInput.setText(password);
+
+                        Glide.with(DetailPasswordActivity.this)
+                                .load(imageURL)
+                                .placeholder(R.drawable.rounded_rectangle_bg)
+                                .error(R.drawable.rounded_rectangle_bg)
+                                .into(iconView);
+                    }
                 });
     }
 }
