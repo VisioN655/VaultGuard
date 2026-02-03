@@ -8,11 +8,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class DetailPasswordActivity extends AppCompatActivity {
 
@@ -47,6 +50,16 @@ public class DetailPasswordActivity extends AppCompatActivity {
         deleteButton = findViewById(R.id.delete_button);
         isPasswordVisible = false;
 
+        titleView.setText(title);
+        emailInput.setText(email);
+        passwordInput.setText(password);
+
+        Glide.with(this)
+                .load(imageURL)
+                .placeholder(R.drawable.rounded_rectangle_bg)
+                .error(R.drawable.rounded_rectangle_bg)
+                .into(iconView);
+
         eyeView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -61,15 +74,25 @@ public class DetailPasswordActivity extends AppCompatActivity {
             }
         });
 
-        titleView.setText(title);
-        emailInput.setText(email);
-        passwordInput.setText(password);
+        editButton.setOnClickListener(new View.OnClickListener() {
+            Intent edit_password = new Intent(DetailPasswordActivity.this, EditPasswordActivity.class);
+            @Override
+            public void onClick(View v) {
+                edit_password.putExtra("docId", docId);
+                edit_password.putExtra("title", title);
+                edit_password.putExtra("email", email);
+                edit_password.putExtra("password", password);
+                edit_password.putExtra("imageURL", imageURL);
+                startActivity(edit_password);
+            }
+        });
 
-        Glide.with(this)
-                .load(imageURL)
-                .placeholder(R.drawable.rounded_rectangle_bg)
-                .error(R.drawable.rounded_rectangle_bg)
-                .into(iconView);
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deletePassword(docId);
+            }
+        });
     }
 
     private void togglePasswordVisibility() {
@@ -84,5 +107,22 @@ public class DetailPasswordActivity extends AppCompatActivity {
             );
             isPasswordVisible = true;
         }
+    }
+
+    private void deletePassword(String docId) {
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        String uid = auth.getCurrentUser().getUid();
+
+        db.collection("users")
+                .document(uid)
+                .collection("passwords")
+                .document(docId)
+                .delete()
+                .addOnSuccessListener(unused -> {
+                    Toast.makeText(this, "Passwort gelöscht", Toast.LENGTH_SHORT).show();
+                    finish();
+                });
     }
 }
