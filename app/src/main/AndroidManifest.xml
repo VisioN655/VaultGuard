@@ -31,7 +31,10 @@
         <activity
             android:name=".AddPasswordActivity"
             android:exported="true">
-
+        </activity>
+        <activity
+            android:name=".DetailPasswordActivity"
+            android:exported="true">
         </activity>
     </application>
 
