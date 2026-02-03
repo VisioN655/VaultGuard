@@ -93,12 +93,7 @@ public class AddPasswordActivity extends AppCompatActivity {
                 if (!validateInput()) {
                     return;
                 }
-
-                if (selectedImage != null) {
-                    uploadImage();
-                } else {
-                    savePasswordToFirebase(null);
-                }
+                uploadImage();
             }
         });
 
