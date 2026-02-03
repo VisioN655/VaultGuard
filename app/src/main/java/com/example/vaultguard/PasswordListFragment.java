@@ -52,8 +52,6 @@ public class PasswordListFragment extends Fragment {
         passwordContainer = view.findViewById(R.id.password_container);
         emptyText = view.findViewById(R.id.empty_list);
         cardInflater = LayoutInflater.from(getContext());
-
-        loadPasswords();
         return view;
     }
 
@@ -64,6 +62,7 @@ public class PasswordListFragment extends Fragment {
     }
 
     private void loadPasswords() {
+        passwordContainer.removeAllViews();
         db.collection("users")
                 .document(uid)
                 .collection("passwords")
