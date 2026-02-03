@@ -1,5 +1,6 @@
 package com.example.vaultguard;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -10,13 +11,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.*;
 import com.google.firebase.auth.*;
 import com.google.firebase.firestore.*;
 import com.bumptech.glide.Glide;
@@ -104,9 +103,15 @@ public class PasswordListFragment extends Fragment {
                                         .into(card_image);
 
                                 passwordCard.setOnClickListener(new View.OnClickListener() {
+                                    Intent edit_password = new Intent(requireContext(), DetailPasswordActivity.class);
                                     @Override
                                     public void onClick(View v) {
-                                        Toast.makeText(getContext(), "Card klick!", Toast.LENGTH_SHORT).show();
+                                        edit_password.putExtra("docId", doc.getId());
+                                        edit_password.putExtra("title", title);
+                                        edit_password.putExtra("email", email);
+                                        edit_password.putExtra("password", password);
+                                        edit_password.putExtra("imageURL", imageURL);
+                                        startActivity(edit_password);
                                     }
                                 });
                                 passwordContainer.addView(card);
