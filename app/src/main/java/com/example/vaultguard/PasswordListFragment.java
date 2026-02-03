@@ -107,10 +107,6 @@ public class PasswordListFragment extends Fragment {
                                     @Override
                                     public void onClick(View v) {
                                         detail_password.putExtra("docId", doc.getId());
-                                        detail_password.putExtra("title", title);
-                                        detail_password.putExtra("email", email);
-                                        detail_password.putExtra("password", password);
-                                        detail_password.putExtra("imageURL", imageURL);
                                         startActivity(detail_password);
                                     }
                                 });
