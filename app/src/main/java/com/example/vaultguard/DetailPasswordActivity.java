@@ -120,9 +120,12 @@ public class DetailPasswordActivity extends AppCompatActivity {
                 .collection("passwords")
                 .document(docId)
                 .delete()
-                .addOnSuccessListener(unused -> {
-                    Toast.makeText(this, "Passwort gelöscht", Toast.LENGTH_SHORT).show();
-                    finish();
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void v) {
+                        Toast.makeText(DetailPasswordActivity.this, "Passwort gelöscht", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
                 });
     }
 
