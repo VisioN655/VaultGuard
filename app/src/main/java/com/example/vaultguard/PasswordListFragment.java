@@ -92,12 +92,14 @@ public class PasswordListFragment extends Fragment {
 
                                 String title = doc.getString("title");
                                 String email = doc.getString("email");
-                                String password = doc.getString("password");
+                                String encryptedPassword = doc.getString("password");
                                 String imageURL = doc.getString("imageURL");
+
+                                String decryptedPassword = Encryption.decrypt(encryptedPassword);
 
                                 card_title.setText(title);
                                 card_email.setText(email);
-                                card_password.setText(password);
+                                card_password.setText(decryptedPassword);
                                 Glide.with(PasswordListFragment.this)
                                         .load(imageURL)
                                         .placeholder(R.drawable.rounded_rectangle_bg)
