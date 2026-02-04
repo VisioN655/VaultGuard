@@ -14,13 +14,10 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
@@ -175,6 +172,8 @@ public class AddPasswordActivity extends AppCompatActivity {
         String title = titleInput.getText().toString().trim();
         String email = emailInput.getText().toString().trim();
         String password = passwordInput.getText().toString().trim();
+        String encryptedPassword = Encryption.encrypt(password);
+
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -183,7 +182,7 @@ public class AddPasswordActivity extends AppCompatActivity {
         Map<String, Object> data = new HashMap<>();
         data.put("title", title);
         data.put("email", email);
-        data.put("password", password);
+        data.put("password", encryptedPassword);
         data.put("imageURL", imageUrl);
 
         db.collection("users")
