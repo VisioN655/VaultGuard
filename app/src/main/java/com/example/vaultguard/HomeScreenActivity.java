@@ -5,10 +5,12 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -17,7 +19,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -27,6 +31,7 @@ public class HomeScreenActivity extends AppCompatActivity {
     FirebaseAuth auth;
     AlertDialog dialogResetPassword;
     AlertDialog dialogConfirmReset;
+    TextView title;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +40,7 @@ public class HomeScreenActivity extends AppCompatActivity {
         addButton = findViewById(R.id.add_button);
         dropdownMenuButton = findViewById(R.id.dropdown_menu_button);
         auth = FirebaseAuth.getInstance();
+        title = findViewById(R.id.title);
 
         if (savedInstanceState == null) {
             getSupportFragmentManager()
@@ -42,6 +48,37 @@ public class HomeScreenActivity extends AppCompatActivity {
                     .replace(R.id.fragment_container, new PasswordListFragment())
                     .commit();
         }
+
+        BottomNavigationView bottomNav = findViewById(R.id.bottom_nav);
+
+        bottomNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+                int id = item.getItemId();
+
+                if (id == R.id.nav_passwords) {
+                    getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.fragment_container, new PasswordListFragment())
+                            .commit();
+                    title.setText("Passwortliste");
+                    return true;
+                }
+
+                if (id == R.id.nav_generator) {
+                    getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.fragment_container, new PasswordGeneratorFragment())
+                            .commit();
+                    title.setText("Passwort-Generator");
+                    return true;
+                }
+
+                return false;
+            }
+        });
+
 
         addButton.setOnClickListener(new View.OnClickListener() {
             Intent create_password = new Intent(HomeScreenActivity.this, AddPasswordActivity.class);
