@@ -25,6 +25,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class DetailPasswordActivity extends AppCompatActivity {
 
     TextView titleView;
+    TextView placeholderLetter;
     TextInputEditText emailInput;
     TextInputEditText passwordInput;
     ImageView iconView;
@@ -56,6 +57,7 @@ public class DetailPasswordActivity extends AppCompatActivity {
         copyEmailOrUsernameButton = findViewById(R.id.copy_email_or_username_button);
         copyPasswordButton = findViewById(R.id.copy_password_button);
         deleteButton = findViewById(R.id.delete_button);
+        placeholderLetter = findViewById(R.id.placeholder_letter);
         isPasswordVisible = false;
 
         docId = getIntent().getStringExtra("docId");
@@ -193,7 +195,18 @@ public class DetailPasswordActivity extends AppCompatActivity {
                                 .placeholder(R.drawable.rounded_rectangle_bg)
                                 .error(R.drawable.rounded_rectangle_bg)
                                 .into(iconView);
+
+                        if (imageURL == null) {
+                            placeholderLetter.setVisibility(View.VISIBLE);
+                            placeholderLetter.setText(getFirstLetter(title));
+                        } else {
+                            placeholderLetter.setVisibility(View.GONE);
+                        }
+
                     }
                 });
+    }
+    private String getFirstLetter(String text) {
+        return text.substring(0, 1).toUpperCase();
     }
 }

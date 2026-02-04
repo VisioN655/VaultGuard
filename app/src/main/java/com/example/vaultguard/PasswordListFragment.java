@@ -31,6 +31,7 @@ public class PasswordListFragment extends Fragment {
     TextInputEditText card_email;
     TextInputEditText card_password;
     ImageView card_image;
+    TextView placeholderLetter;
     View view;
     View card;
     FirebaseFirestore db;
@@ -86,6 +87,7 @@ public class PasswordListFragment extends Fragment {
                                 card_email = card.findViewById(R.id.item_email_input);
                                 card_password = card.findViewById(R.id.item_password_input);
                                 card_image = card.findViewById(R.id.platform_icon);
+                                placeholderLetter = card.findViewById(R.id.placeholder_letter);
 
 
                                 String title = doc.getString("title");
@@ -102,6 +104,13 @@ public class PasswordListFragment extends Fragment {
                                         .error(R.drawable.rounded_rectangle_bg)
                                         .into(card_image);
 
+                                if (imageURL == null) {
+                                    placeholderLetter.setVisibility(View.VISIBLE);
+                                    placeholderLetter.setText(getFirstLetter(title));
+                                } else {
+                                    placeholderLetter.setVisibility(View.GONE);
+                                }
+
                                 passwordCard.setOnClickListener(new View.OnClickListener() {
                                     Intent detail_password = new Intent(requireContext(), DetailPasswordActivity.class);
                                     @Override
@@ -115,5 +124,9 @@ public class PasswordListFragment extends Fragment {
                         }
                     }
                 });
+    }
+
+    private String getFirstLetter(String text) {
+        return text.substring(0, 1).toUpperCase();
     }
 }
