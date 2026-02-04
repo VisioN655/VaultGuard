@@ -203,13 +203,14 @@ public class EditPasswordActivity extends AppCompatActivity {
         String title = titleInput.getText().toString().trim();
         String email = emailInput.getText().toString().trim();
         String password = passwordInput.getText().toString().trim();
+        String encryptedPassword = Encryption.encrypt(password);
 
         String uid = auth.getCurrentUser().getUid();
 
         Map<String, Object> data = new HashMap<>();
         data.put("title", title);
         data.put("email", email);
-        data.put("password", password);
+        data.put("password", encryptedPassword);
         data.put("imageURL", imageUrl);
 
         db.collection("users")
