@@ -1,5 +1,7 @@
 package com.example.vaultguard;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
@@ -30,6 +32,8 @@ public class DetailPasswordActivity extends AppCompatActivity {
     Button cancelButton;
     Button editButton;
     Button deleteButton;
+    Button copyEmailOrUsernameButton;
+    Button copyPasswordButton;
     String docId;
     String title;
     String email;
@@ -49,6 +53,8 @@ public class DetailPasswordActivity extends AppCompatActivity {
         eyeView = findViewById(R.id.show_password);
         cancelButton = findViewById(R.id.cancel_button);
         editButton = findViewById(R.id.edit_button);
+        copyEmailOrUsernameButton = findViewById(R.id.copy_email_or_username_button);
+        copyPasswordButton = findViewById(R.id.copy_password_button);
         deleteButton = findViewById(R.id.delete_button);
         isPasswordVisible = false;
 
@@ -85,6 +91,36 @@ public class DetailPasswordActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 deletePassword(docId);
+            }
+        });
+
+        copyEmailOrUsernameButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ClipboardManager clipboard =
+                        (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+
+                clipboard.setPrimaryClip(
+                        ClipData.newPlainText("email", emailInput.getText().toString())
+                );
+
+                Toast.makeText(DetailPasswordActivity.this,
+                        "E-Mail/Nutzername kopiert", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        copyPasswordButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ClipboardManager clipboard =
+                        (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+
+                clipboard.setPrimaryClip(
+                        ClipData.newPlainText("password", passwordInput.getText().toString())
+                );
+
+                Toast.makeText(DetailPasswordActivity.this,
+                        "Passwort kopiert", Toast.LENGTH_SHORT).show();
             }
         });
     }
