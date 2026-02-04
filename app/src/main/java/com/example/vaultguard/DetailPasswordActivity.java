@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -38,7 +37,8 @@ public class DetailPasswordActivity extends AppCompatActivity {
     String docId;
     String title;
     String email;
-    String password;
+    String encryptedPassword;
+    String decryptedPassword;
     String imageURL;
     boolean isPasswordVisible;
 
@@ -83,7 +83,7 @@ public class DetailPasswordActivity extends AppCompatActivity {
                 edit_password.putExtra("docId", docId);
                 edit_password.putExtra("title", title);
                 edit_password.putExtra("email", email);
-                edit_password.putExtra("password", password);
+                edit_password.putExtra("password", decryptedPassword);
                 edit_password.putExtra("imageURL", imageURL);
                 startActivity(edit_password);
             }
@@ -183,12 +183,14 @@ public class DetailPasswordActivity extends AppCompatActivity {
 
                         title = doc.getString("title");
                         email = doc.getString("email");
-                        password = doc.getString("password");
+                        encryptedPassword = doc.getString("password");
                         imageURL = doc.getString("imageURL");
+
+                        decryptedPassword = Encryption.decrypt(encryptedPassword);
 
                         titleView.setText(title);
                         emailInput.setText(email);
-                        passwordInput.setText(password);
+                        passwordInput.setText(decryptedPassword);
 
                         Glide.with(DetailPasswordActivity.this)
                                 .load(imageURL)
