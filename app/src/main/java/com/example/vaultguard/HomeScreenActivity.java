@@ -26,22 +26,37 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class HomeScreenActivity extends AppCompatActivity {
+
+    // UI-Elemente
     MaterialCardView addButton;
     ImageView dropdownMenuButton;
+
+    // Firebase Auth für Logout und Passwort-Reset
     FirebaseAuth auth;
+
+    // Dialoge für Passwort-Reset
     AlertDialog dialogResetPassword;
     AlertDialog dialogConfirmReset;
+
+    // Titel der Passwörter
     TextView title;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_screen);
+
+        // UI initialisieren
         addButton = findViewById(R.id.add_button);
         dropdownMenuButton = findViewById(R.id.dropdown_menu_button);
+
+        // Firebase Auth initialisieren
         auth = FirebaseAuth.getInstance();
+
+        // Titel initialisieren
         title = findViewById(R.id.title);
 
+        // Standardmäßig wird die Passwortliste angezeigt
         if (savedInstanceState == null) {
             getSupportFragmentManager()
             .beginTransaction()
@@ -49,6 +64,7 @@ public class HomeScreenActivity extends AppCompatActivity {
                     .commit();
         }
 
+        // Bottom Navigation (Wechsel zwischen Fragments)
         BottomNavigationView bottomNav = findViewById(R.id.bottom_nav);
 
         bottomNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
@@ -57,6 +73,7 @@ public class HomeScreenActivity extends AppCompatActivity {
 
                 int id = item.getItemId();
 
+                // Passwortliste anzeigen
                 if (id == R.id.nav_passwords) {
                     getSupportFragmentManager()
                             .beginTransaction()
@@ -66,6 +83,7 @@ public class HomeScreenActivity extends AppCompatActivity {
                     return true;
                 }
 
+                // Passwort-Generator anzeigen
                 if (id == R.id.nav_generator) {
                     getSupportFragmentManager()
                             .beginTransaction()
@@ -79,7 +97,7 @@ public class HomeScreenActivity extends AppCompatActivity {
             }
         });
 
-
+        // "+" Button -> neue Passwort-Activity öffnen
         addButton.setOnClickListener(new View.OnClickListener() {
             Intent create_password = new Intent(HomeScreenActivity.this, AddPasswordActivity.class);
             @Override
@@ -88,15 +106,18 @@ public class HomeScreenActivity extends AppCompatActivity {
             }
         });
 
+        // Dropdown-Menü (Logout + Passwort zurücksetzen)
         dropdownMenuButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 PopupMenu menu = new PopupMenu(HomeScreenActivity.this, v);
 
+                // Menüoptionen hinzufügen
                 menu.getMenu().add("Logout");
                 menu.getMenu().add("Passwort zurücksetzen");
 
+                // Klick-Handling für Menü
                 menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(android.view.MenuItem item) {
@@ -121,12 +142,14 @@ public class HomeScreenActivity extends AppCompatActivity {
         });
     }
 
+    // Logout -> zurück zur Login-Seite
     private void doLogout() {
         Intent logout = new Intent(HomeScreenActivity.this, LoginActivity.class);
         startActivity(logout);
         finish();
     }
 
+    // Öffnet Dialog zur Eingabe der E-Mail für Passwort-Reset
     private void showResetPasswordDialog() {
         LayoutInflater dialogInflater = getLayoutInflater();
         View dialogView = dialogInflater.inflate(R.layout.dialog_reset_password, null);
@@ -134,10 +157,15 @@ public class HomeScreenActivity extends AppCompatActivity {
         Button sendenButton = dialogView.findViewById(R.id.send_button);
         Button abbrechenButton = dialogView.findViewById(R.id.cancel_button);
 
+        // Dialog erstellen und anzeigen
         dialogResetPassword = new AlertDialog.Builder(HomeScreenActivity.this).setView(dialogView).setCancelable(true).create();
+
         dialogResetPassword.show();
+
+        // Transparenter Hintergrund für Custom Design
         dialogResetPassword.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
+        // Dialog schließen
         abbrechenButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -145,6 +173,7 @@ public class HomeScreenActivity extends AppCompatActivity {
             }
         });
 
+        // Passwort-Reset auslösen
         sendenButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -156,6 +185,8 @@ public class HomeScreenActivity extends AppCompatActivity {
             }
         });
     }
+
+    // Validiert E-Mail-Eingabe
     private boolean validateEmail(String email) {
         if (email.isEmpty()) {
             Toast.makeText(this,"Das E-Mail-Feld darf nicht leer sein!", Toast.LENGTH_SHORT).show();
@@ -164,9 +195,12 @@ public class HomeScreenActivity extends AppCompatActivity {
         return true;
     }
 
+    // Sendet Passwort-Reset-Mail über Firebase
     private void fireBaseResetPassword(String email) {
         auth.sendPasswordResetEmail(email).addOnCompleteListener(this, new OnCompleteListener<Void>() {
             public void onComplete(@NonNull Task<Void> resetPassword) {
+
+                // Erfolg -> Bestätigungsdialog anzeigen
                 if (resetPassword.isSuccessful()) {
                     if (dialogResetPassword != null)  {
                         dialogResetPassword.dismiss();
@@ -174,6 +208,8 @@ public class HomeScreenActivity extends AppCompatActivity {
                     showConfirmResetDialog();
                     return;
                 }
+
+                // Fehlerbehandlung (z.B. ungültige E-Mail)
                 Exception e = resetPassword.getException();
 
                 if (e instanceof com.google.firebase.auth.FirebaseAuthInvalidCredentialsException) {
@@ -183,6 +219,7 @@ public class HomeScreenActivity extends AppCompatActivity {
         });
     }
 
+    // Bestätigungsdialog nach erfolgreichem Reset
     private void showConfirmResetDialog() {
         LayoutInflater dialogInflater = getLayoutInflater();
         View dialogView = dialogInflater.inflate(R.layout.dialog_confirm_reset, null);
@@ -192,6 +229,8 @@ public class HomeScreenActivity extends AppCompatActivity {
         dialogConfirmReset.show();
         dialogConfirmReset.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
+
+        // Zurück zur Login-Seite nach Bestätigung
         bestaetigenButton.setOnClickListener(new View.OnClickListener() {
             Intent login_screen = new Intent(HomeScreenActivity.this, LoginActivity.class);
             @Override

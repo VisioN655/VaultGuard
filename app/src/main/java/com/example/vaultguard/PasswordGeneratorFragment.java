@@ -21,26 +21,33 @@ import java.security.SecureRandom;
 
 public class PasswordGeneratorFragment extends Fragment {
 
+    // Checkboxen für Auswahl der Zeichenarten
     CheckBox checkUppercase;
     CheckBox checkLowercase;
     CheckBox checkNumbers;
     CheckBox checkSymbols;
 
+    // UI für Länge und Ausgabe
     SeekBar lengthSeekbar;
     TextView lengthValue;
     TextView generatedPassword;
 
+    // Buttons
     Button generateButton;
     Button copyButton;
 
+    // Aktuelle Passwortlänge
     int length;
 
     public PasswordGeneratorFragment() { }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        // Fragment-Layout laden
         View view = inflater.inflate(R.layout.fragment_password_generator, container, false);
 
+        // UI-Elemente verbinden
         checkUppercase = view.findViewById(R.id.check_uppercase);
         checkLowercase = view.findViewById(R.id.check_lowercase);
         checkNumbers = view.findViewById(R.id.check_numbers);
@@ -53,9 +60,11 @@ public class PasswordGeneratorFragment extends Fragment {
         generateButton = view.findViewById(R.id.generate_button);
         copyButton = view.findViewById(R.id.copy_button);
 
+        // Initiale Länge setzen (8–16)
         length = 8 + lengthSeekbar.getProgress();
         lengthValue.setText(length + " Zeichen");
 
+        // Reagiert auf Änderungen am Slider
         lengthSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -70,22 +79,30 @@ public class PasswordGeneratorFragment extends Fragment {
             public void onStopTrackingTouch(SeekBar seekBar) { }
         });
 
+        // Passwort generieren
         generateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String pw = generatePassword(length);
+
+                // Fehlerfall: keine Checkbox ausgewählt
                 if (pw == null) {
                     Toast.makeText(getContext(), "Bitte mindestens eine Option auswählen", Toast.LENGTH_SHORT).show();
                     return;
                 }
+
+                // Passwort anzeigen
                 generatedPassword.setText(pw);
             }
         });
 
+        // Passwort kopieren
         copyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String text = generatedPassword.getText().toString();
+
+                // Prüfen ob ein Passwort existiert
                 if (text.trim().isEmpty() || text.equals("— — — — — —")) {
                     Toast.makeText(getContext(), "Bitte zuerst ein Passwort generieren", Toast.LENGTH_SHORT).show();
                     return;
@@ -97,6 +114,7 @@ public class PasswordGeneratorFragment extends Fragment {
         return view;
     }
 
+    // Generiert ein Passwort basierend auf den gewählten Optionen
     private String generatePassword(int length) {
 
         boolean useUppercase = checkUppercase.isChecked();
@@ -104,20 +122,26 @@ public class PasswordGeneratorFragment extends Fragment {
         boolean useNumbers = checkNumbers.isChecked();
         boolean useSymbols = checkSymbols.isChecked();
 
+        // Wenn nichts ausgewählt -> Abbruch
         if (!useUppercase && !useLowercase && !useNumbers && !useSymbols) {
             return null;
         }
 
+        // Zeichensätze
         String upperCase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         String lowerCase = "abcdefghijklmnopqrstuvwxyz";
         String numbers = "0123456789";
         String symbols = "!@#$%^&*()-_=+[]{};:,.<>?/";
 
         SecureRandom random = new SecureRandom();
+
+        // Pool = alle erlaubten Zeichen
         StringBuilder pool = new StringBuilder();
+
+        // Ergebnis-Passwort
         StringBuilder result = new StringBuilder();
 
-
+        // Garantiert mindestens 1 Zeichen pro gewählter Kategorie
         if (useUppercase) {
             pool.append(upperCase);
             result.append(upperCase.charAt(random.nextInt(upperCase.length())));
@@ -135,6 +159,7 @@ public class PasswordGeneratorFragment extends Fragment {
             result.append(symbols.charAt(random.nextInt(symbols.length())));
         }
 
+        // Restliche Zeichen zufällig aus dem Pool ergänzen
         while (result.length() < length) {
             result.append(pool.charAt(random.nextInt(pool.length())));
         }
@@ -142,6 +167,7 @@ public class PasswordGeneratorFragment extends Fragment {
         return result.toString();
     }
 
+    // Kopiert Passwort in die Zwischenablage
     private void copyToClipboard(String text) {
 
         ClipboardManager clipboard =

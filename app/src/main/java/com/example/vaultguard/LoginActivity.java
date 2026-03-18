@@ -24,9 +24,15 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.*;
 
 public class LoginActivity extends AppCompatActivity {
+
+    // Firebase Auth für Login & Passwort-Reset
     FirebaseAuth auth;
+
+    // Eingabefelder
     TextInputEditText emailFeld;
     TextInputEditText passwortFeld;
+
+    // Fehlermeldungen (UI)
     TextView missingEmailAndPassword;
     TextView missingEmail;
     TextView missingPassword;
@@ -34,13 +40,20 @@ public class LoginActivity extends AppCompatActivity {
     TextView invalidPassword;
     TextView userNotVerified;
     TextView loginFailed;
+
+    // Buttons
     Button loginButton;
     Button registerButton;
     Button resetPasswordButton;
+
     String passwordText;
     String emailText;
+
+    // Passwort sichtbar/unsichtbar Toggle
     ImageView eyeView;
     boolean isPasswordVisible;
+
+    // Dialoge für Passwort-Reset
     AlertDialog dialogResetPassword;
     AlertDialog dialogConfirmReset;
 
@@ -49,7 +62,11 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        // Firebase initialisieren
         auth = FirebaseAuth.getInstance();
+
+        // UI-Elemente verbinden
         emailFeld = findViewById(R.id.email_input);
         passwortFeld = findViewById(R.id.password_input);
         missingEmailAndPassword = findViewById(R.id.missing_email_and_password);
@@ -59,22 +76,26 @@ public class LoginActivity extends AppCompatActivity {
         invalidPassword = findViewById(R.id.invalid_password);
         userNotVerified = findViewById(R.id.user_not_verified);
         loginFailed = findViewById(R.id.login_failed);
+
         loginButton = findViewById(R.id.login_button);
         registerButton = findViewById(R.id.register_button);
         resetPasswordButton = findViewById(R.id.reset_password_button);
         eyeView = findViewById(R.id.show_password);
+
         passwordText = passwortFeld.getText().toString().trim();
         emailText = emailFeld.getText().toString().trim();
+
         isPasswordVisible = false;
 
+        // Login Button -> startet Validierung + Login
         loginButton.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 validateLogin();
             }
         });
 
+        // Wechsel zur Registrierung
         registerButton.setOnClickListener(new View.OnClickListener() {
             Intent registrieren = new Intent(LoginActivity.this, RegisterActivity.class);
             @Override
@@ -83,6 +104,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        // Passwort anzeigen/verbergen
         eyeView.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -90,6 +112,8 @@ public class LoginActivity extends AppCompatActivity {
                 togglePasswordVisibility();
             }
         });
+
+        // Passwort vergessen
         resetPasswordButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -99,7 +123,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-
+    // Toggle zwischen Sternchen (maskiertes Passwort) und Klartext Passwort
     private void togglePasswordVisibility() {
         if (isPasswordVisible) {
             passwortFeld.setTransformationMethod(
@@ -114,6 +138,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    // Öffnet Dialog zum Zurücksetzen des Passworts
     private void showResetPasswordDialog() {
         LayoutInflater dialogInflater = getLayoutInflater();
         View dialogView = dialogInflater.inflate(R.layout.dialog_reset_password, null);
@@ -123,8 +148,11 @@ public class LoginActivity extends AppCompatActivity {
 
         dialogResetPassword = new AlertDialog.Builder(LoginActivity.this).setView(dialogView).setCancelable(true).create();
         dialogResetPassword.show();
+
+        // Transparenter Hintergrund für Custom UI
         dialogResetPassword.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
+        // Abbrechen -> Dialog schließen
         abbrechenButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -132,6 +160,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        // Passwort-Reset starten
         sendenButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -144,6 +173,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    // Bestätigungsdialog nach erfolgreichem Reset
     private void showConfirmResetDialog() {
         LayoutInflater dialogInflater = getLayoutInflater();
         View dialogView = dialogInflater.inflate(R.layout.dialog_confirm_reset, null);
@@ -161,6 +191,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    // Setzt alle Fehlermeldungen zurück
     private void clearErrors() {
         missingEmail.setVisibility(View.INVISIBLE);
         missingPassword.setVisibility(View.INVISIBLE);
@@ -171,6 +202,7 @@ public class LoginActivity extends AppCompatActivity {
         userNotVerified.setVisibility(View.INVISIBLE);
     }
 
+    // Einfache E-Mail-Validierung
     private boolean validateEmail(String email) {
         if (email.isEmpty()) {
             Toast.makeText(this,"Das E-Mail-Feld darf nicht leer sein!", Toast.LENGTH_SHORT).show();
@@ -179,6 +211,7 @@ public class LoginActivity extends AppCompatActivity {
         return true;
     }
 
+    // Validiert Login-Daten (Frontend-Check)
     private boolean validateData() {
         clearErrors();
 
@@ -211,6 +244,7 @@ public class LoginActivity extends AppCompatActivity {
         return true;
     }
 
+    // Firebase Passwort-Reset
     private void fireBaseResetPassword(String email) {
         auth.sendPasswordResetEmail(email).addOnCompleteListener(this, new OnCompleteListener<Void>() {
             public void onComplete(@NonNull Task<Void> resetPassword) {
@@ -230,10 +264,14 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    // Prüft ob User E-Mail bestätigt hat
     private void checkUserVerification() {
         Intent HomeScreen = new Intent(LoginActivity.this, HomeScreenActivity.class);
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        // aktualisiert User-Daten von Firebase
         user.reload();
+
         if (user.isEmailVerified()) {
             startActivity(HomeScreen);
             finish();
@@ -242,6 +280,8 @@ public class LoginActivity extends AppCompatActivity {
         }
 
     }
+
+    // Firebase Login
     private void fireBaseAuthLogin() {
         String emailText = emailFeld.getText().toString().trim();
         String passwordText = passwortFeld.getText().toString().trim();
@@ -254,6 +294,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    // Gesamt-Login Ablauf (Validation + Firebase)
     private boolean validateLogin() {
         if (!validateData()) {
             return false;

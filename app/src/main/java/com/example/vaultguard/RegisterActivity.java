@@ -29,20 +29,33 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.zip.Inflater;
 
 public class RegisterActivity extends AppCompatActivity {
+
+    // Firebase Auth für Registrierung
     FirebaseAuth auth;
+
+    // Eingabefelder
     TextInputEditText emailFeld;
     TextInputEditText passwortFeld;
+
+    // Buttons
     Button registerButton;
     Button loginButton;
+
+    // Fehlermeldungen (UI)
     TextView missingEmailAndPassword;
     TextView missingEmail;
     TextView missingPassword;
     TextView invalidEmail;
     TextView invalidPassword;
     TextView emailAlreadyUsed;
+
+    // Passwort anzeigen/verbergen
     ImageView eyeView;
     boolean isPasswordVisible;
+
+    // Bestätigungsdialog nach Registrierung
     AlertDialog dialogConfirmRegister;
+
     String email;
     String password;
 
@@ -50,22 +63,30 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
+        // Firebase initialisieren
         auth = FirebaseAuth.getInstance();
+
+        // UI-Elemente verbinden
         emailFeld = findViewById(R.id.email_input);
         passwortFeld = findViewById(R.id.password_input);
         registerButton = findViewById(R.id.register_button);
         loginButton = findViewById(R.id.login_button);
+
         missingEmailAndPassword = findViewById(R.id.missing_email_and_password);
         missingEmail = findViewById(R.id.missing_email);
         missingPassword = findViewById(R.id.missing_password);
         invalidEmail = findViewById(R.id.invalid_email);
         invalidPassword = findViewById(R.id.invalid_password);
         emailAlreadyUsed = findViewById(R.id.email_already_used);
+
         eyeView = findViewById(R.id.show_password);
         isPasswordVisible = false;
+
         email = emailFeld.getText().toString().trim();
         password = passwortFeld.getText().toString().trim();
 
+        // Registrieren-Button
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick (View v) {
@@ -73,6 +94,7 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
+        // Zurück zum Login
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick (View v) {
@@ -80,6 +102,7 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
+        // Passwort sichtbar/unsichtbar
         eyeView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,6 +110,8 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
     }
+
+    // Toggle Passwort-Anzeige
     private void togglePasswordVisibility() {
         if (isPasswordVisible) {
             passwortFeld.setTransformationMethod(
@@ -100,6 +125,8 @@ public class RegisterActivity extends AppCompatActivity {
             isPasswordVisible = true;
         }
     }
+
+    // Setzt alle Fehlermeldungen zurück
     private void clearErrors() {
         missingEmail.setVisibility(View.INVISIBLE);
         missingPassword.setVisibility(View.INVISIBLE);
@@ -109,6 +136,7 @@ public class RegisterActivity extends AppCompatActivity {
         emailAlreadyUsed.setVisibility(View.INVISIBLE);
     }
 
+    // Validiert Eingaben (Frontend)
     private boolean validateData() {
         clearErrors();
 
@@ -141,6 +169,8 @@ public class RegisterActivity extends AppCompatActivity {
         return true;
     }
 
+
+    // Zeigt Bestätigungsdialog nach erfolgreicher Registrierung
     private void showConfirmRegisterDialog() {
         LayoutInflater dialogInflater = getLayoutInflater();
         View dialogView = dialogInflater.inflate(R.layout.dialog_confirm_register, null);
@@ -160,6 +190,7 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
+    // Sendet Verifizierungs-Mail nach Registrierung
     private void fireBaseConfirmRegister() {
         FirebaseUser user = auth.getCurrentUser();
 
@@ -173,6 +204,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
+    // Registrierung bei Firebase
     private void fireBaseRegister() {
         email = emailFeld.getText().toString().trim();
         password = passwortFeld.getText().toString().trim();
@@ -185,6 +217,8 @@ public class RegisterActivity extends AppCompatActivity {
                     Log.d("REGISTER", "Erfolgreich registriert!");
                     return;
                 } else {
+
+                    // Fehlerbehandlung
                     if (e instanceof com.google.firebase.auth.FirebaseAuthUserCollisionException) {
                         emailAlreadyUsed.setVisibility(View.VISIBLE);
                     }
@@ -196,6 +230,7 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
+    // Gesamt-Registrierungsflow
     private boolean validateRegister() {
         if (!validateData()) {
             return false;

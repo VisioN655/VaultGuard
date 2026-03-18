@@ -23,23 +23,30 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class DetailPasswordActivity extends AppCompatActivity {
 
+    // UI-Elemente zur Anzeige der Passwort-Daten
     TextView titleView;
     TextView placeholderLetter;
     TextInputEditText emailInput;
     TextInputEditText passwordInput;
     ImageView iconView;
     ImageView eyeView;
+
+    // Buttons für Aktionen
     Button cancelButton;
     Button editButton;
     Button deleteButton;
     Button copyEmailOrUsernameButton;
     Button copyPasswordButton;
+
+    // Daten aus Firestore
     String docId;
     String title;
     String email;
     String encryptedPassword;
     String decryptedPassword;
     String imageURL;
+
+    // Status für Passwort-Sichtbarkeit
     boolean isPasswordVisible;
 
     @Override
@@ -47,6 +54,7 @@ public class DetailPasswordActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_password);
 
+        // UI initialisieren
         titleView = findViewById(R.id.platform_title);
         emailInput = findViewById(R.id.item_email_input);
         passwordInput = findViewById(R.id.item_password_input);
@@ -58,10 +66,13 @@ public class DetailPasswordActivity extends AppCompatActivity {
         copyPasswordButton = findViewById(R.id.copy_password_button);
         deleteButton = findViewById(R.id.delete_button);
         placeholderLetter = findViewById(R.id.placeholder_letter);
+
         isPasswordVisible = false;
 
+        // docId wird aus der vorherigen Activity übergeben
         docId = getIntent().getStringExtra("docId");
 
+        // Passwort sichtbar/unsichtbar schalten
         eyeView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -69,6 +80,7 @@ public class DetailPasswordActivity extends AppCompatActivity {
             }
         });
 
+        // Zurück zur vorherigen Seite
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,6 +88,7 @@ public class DetailPasswordActivity extends AppCompatActivity {
             }
         });
 
+        // Öffnet EditPasswordActivity mit aktuellen Daten
         editButton.setOnClickListener(new View.OnClickListener() {
             Intent edit_password = new Intent(DetailPasswordActivity.this, EditPasswordActivity.class);
             @Override
@@ -89,6 +102,7 @@ public class DetailPasswordActivity extends AppCompatActivity {
             }
         });
 
+        // Löscht den Eintrag aus Firebase
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -96,6 +110,7 @@ public class DetailPasswordActivity extends AppCompatActivity {
             }
         });
 
+        // Kopiert E-Mail/Benutzername in die Zwischenablage
         copyEmailOrUsernameButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -111,6 +126,7 @@ public class DetailPasswordActivity extends AppCompatActivity {
             }
         });
 
+        // Kopiert Passwort in die Zwischenablage
         copyPasswordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -127,12 +143,14 @@ public class DetailPasswordActivity extends AppCompatActivity {
         });
     }
 
+    // Wird aufgerufen wenn Activity wieder sichtbar wird → lädt aktuelle Daten
     @Override
     public void onResume() {
         super.onResume();
         loadPassword();
     }
 
+    // Toggle für Passwort-Anzeige (Sternchen / Klartext)
     private void togglePasswordVisibility() {
         if (isPasswordVisible) {
             passwordInput.setTransformationMethod(
@@ -147,6 +165,7 @@ public class DetailPasswordActivity extends AppCompatActivity {
         }
     }
 
+    // Löscht Passwort-Dokument aus Firestore
     private void deletePassword(String docId) {
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -167,6 +186,7 @@ public class DetailPasswordActivity extends AppCompatActivity {
                 });
     }
 
+    // Lädt Passwort-Daten aus Firestore
     private void loadPassword() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -181,23 +201,28 @@ public class DetailPasswordActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(DocumentSnapshot doc) {
 
+                        // Daten aus Firestore lesen
                         title = doc.getString("title");
                         email = doc.getString("email");
                         encryptedPassword = doc.getString("password");
                         imageURL = doc.getString("imageURL");
 
+                        // Passwort wird vor Anzeige entschlüsselt
                         decryptedPassword = Encryption.decrypt(encryptedPassword);
 
+                        // UI aktualisieren
                         titleView.setText(title);
                         emailInput.setText(email);
                         passwordInput.setText(decryptedPassword);
 
+                        // Bild mit Glide laden (oder Placeholder anzeigen)
                         Glide.with(DetailPasswordActivity.this)
                                 .load(imageURL)
                                 .placeholder(R.drawable.rounded_rectangle_bg)
                                 .error(R.drawable.rounded_rectangle_bg)
                                 .into(iconView);
 
+                        // Falls kein Bild vorhanden -> ersten Buchstaben anzeigen
                         if (imageURL == null) {
                             placeholderLetter.setVisibility(View.VISIBLE);
                             placeholderLetter.setText(getFirstLetter(title));
@@ -208,6 +233,8 @@ public class DetailPasswordActivity extends AppCompatActivity {
                     }
                 });
     }
+
+    // Gibt den ersten Buchstaben eines Strings zurück (für Placeholder)
     private String getFirstLetter(String text) {
         return text.substring(0, 1).toUpperCase();
     }

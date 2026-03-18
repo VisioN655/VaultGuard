@@ -30,6 +30,7 @@ import java.util.Map;
 
 public class EditPasswordActivity extends AppCompatActivity {
 
+    // UI-Elemente für Eingaben und Aktionen
     TextInputEditText titleInput;
     TextInputEditText emailInput;
     TextInputEditText passwordInput;
@@ -39,16 +40,20 @@ public class EditPasswordActivity extends AppCompatActivity {
     TextView uploadText;
     ImageView eyeView;
 
+    // Bildauswahl
     Uri selectedImage;
     ActivityResultLauncher<String> imagePickerLauncher;
 
+    // Firebase Instanzen
     FirebaseFirestore db;
     FirebaseAuth auth;
     FirebaseStorage storage;
     StorageReference storageRef;
 
+    // Status für Passwort-Sichtbarkeit
     boolean isPasswordVisible;
 
+    // Daten aus vorheriger Activity
     String docId;
     String title;
     String email;
@@ -60,6 +65,7 @@ public class EditPasswordActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_password);
 
+        // UI initialisieren
         titleInput = findViewById(R.id.title_input);
         emailInput = findViewById(R.id.email_input);
         passwordInput = findViewById(R.id.password_input);
@@ -68,27 +74,35 @@ public class EditPasswordActivity extends AppCompatActivity {
         uploadImage = findViewById(R.id.upload_border);
         uploadText = findViewById(R.id.upload_text);
         eyeView = findViewById(R.id.show_password);
+
+        // Firebase initialisieren
         db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
         storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
+
         isPasswordVisible = false;
+
+        // Daten aus Intent übernehmen
         docId = getIntent().getStringExtra("docId");
         title = getIntent().getStringExtra("title");
         email = getIntent().getStringExtra("email");
         password = getIntent().getStringExtra("password");
         currentImageUrl = getIntent().getStringExtra("imageURL");
 
+        // Felder mit bestehenden Daten füllen
         titleInput.setText(title);
         emailInput.setText(email);
         passwordInput.setText(password);
 
+        // Anzeige ob bereits ein Bild vorhanden ist
         if (currentImageUrl != null && !currentImageUrl.isEmpty()) {
             uploadText.setText("Bild ausgewählt ✓");
         } else {
             uploadText.setText("Bild hochladen");
         }
 
+        // Galerie öffnen zur Bildauswahl
         imagePickerLauncher = registerForActivityResult(
                 new ActivityResultContracts.GetContent(),
                 new ActivityResultCallback<Uri>() {
@@ -104,6 +118,7 @@ public class EditPasswordActivity extends AppCompatActivity {
                 }
         );
 
+        // Klick auf Upload-Bereich öffnet Galerie
         uploadImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -111,6 +126,7 @@ public class EditPasswordActivity extends AppCompatActivity {
             }
         });
 
+        // Speichern-Button
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -119,14 +135,16 @@ public class EditPasswordActivity extends AppCompatActivity {
                     return;
                 }
 
+                // Wenn neues Bild ausgewählt -> zuerst hochladen
                 if (selectedImage != null) {
                     uploadImageAndUpdate();
                 } else {
+                    // sonst direkt updaten
                     updatePassword(currentImageUrl);
                 }
             }
         });
-
+        // Abbrechen -> zurück
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -134,6 +152,7 @@ public class EditPasswordActivity extends AppCompatActivity {
             }
         });
 
+        // Passwort sichtbar/unsichtbar schalten
         eyeView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -142,6 +161,7 @@ public class EditPasswordActivity extends AppCompatActivity {
         });
     }
 
+    // Validiert Eingaben
     private boolean validateInput() {
 
         String titleText = titleInput.getText().toString().trim();
@@ -168,6 +188,7 @@ public class EditPasswordActivity extends AppCompatActivity {
         return true;
     }
 
+    // Lädt neues Bild hoch und aktualisiert danach den Datensatz
     private void uploadImageAndUpdate() {
 
         StorageReference imageRef = storageRef
@@ -181,6 +202,7 @@ public class EditPasswordActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
+                        // URL des hochgeladenen Bildes holen
                         imageRef.getDownloadUrl()
                                 .addOnSuccessListener(new OnSuccessListener<Uri>() {
                                     @Override
@@ -198,11 +220,14 @@ public class EditPasswordActivity extends AppCompatActivity {
                 });
     }
 
+    // Aktualisiert Passwort-Daten in Firestore
     private void updatePassword(String imageUrl) {
 
         String title = titleInput.getText().toString().trim();
         String email = emailInput.getText().toString().trim();
         String password = passwordInput.getText().toString().trim();
+
+        // Passwort wird vor Speicherung verschlüsselt
         String encryptedPassword = Encryption.encrypt(password);
 
         String uid = auth.getCurrentUser().getUid();
@@ -213,6 +238,7 @@ public class EditPasswordActivity extends AppCompatActivity {
         data.put("password", encryptedPassword);
         data.put("imageURL", imageUrl);
 
+        // Dokument wird aktualisiert
         db.collection("users")
                 .document(uid)
                 .collection("passwords")
@@ -227,6 +253,7 @@ public class EditPasswordActivity extends AppCompatActivity {
                 });
     }
 
+    // Umschalten der Passwort-Sichtbarkeit
     private void togglePasswordVisibility() {
 
         if (isPasswordVisible) {
@@ -237,6 +264,7 @@ public class EditPasswordActivity extends AppCompatActivity {
             isPasswordVisible = true;
         }
 
+        // Cursor bleibt am Ende des Textes
         if (passwordInput.getText() != null) {
             passwordInput.setSelection(passwordInput.getText().length());
         }
